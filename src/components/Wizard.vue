@@ -24,7 +24,7 @@
               <div class="relative flex items-center">
                 <input
                     id="username"
-                    name="name" type="text" v-model="user.username" @input="validateUsername" required
+                    name="name" type="text" v-model="user.username" @input="validateUsername"
                     class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md"
                     :class="errors.username ? 'border-red-500 outline-red-500' : 'border-gray-30 outline-blue-500'"
                     placeholder="Enter username"/>
@@ -44,7 +44,7 @@
               <div class="relative flex items-center">
                 <input
                     id="email"
-                    name="email" type="email" v-model="user.email" @input="validateEmail" required
+                    name="email" type="text" v-model="user.email" @input="validateEmail"
                     class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md"
                     :class="errors.email ? 'border-red-500 outline-red-500' : 'border-gray-30 outline-blue-500'"
                     placeholder="Enter email"/>
@@ -72,11 +72,12 @@
               <p><span class="font-semibold">Username:</span> {{ user.username }}</p>
               <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
             </div>
+
           </div>
 
           <div class="flex flex-row-reverse gap-4 mt-6">
             <button
-                v-show="nextButtonEnable"
+                v-show="activeStep !== 2"
                 @click="nextStep"
                 :disabled="!nextButtonEnable"
                 id="btn-next"
@@ -88,13 +89,13 @@
             </button>
 
             <button
-                v-show="activeStep === 1"
-                :disabled="activeStep !== 1"
-                @click="activeStep = 0"
+                v-show="activeStep > 0"
+                :disabled="activeStep === 0"
+                @click="--activeStep"
                 id="btn-prev"
                 type="button"
                 class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
-                :class="activeStep !== 1 ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-gray-700 hover:bg-gray-800'"
+                :class="activeStep === 0 ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-gray-700 hover:bg-gray-800'"
             >
               Prev Step
             </button>
@@ -148,8 +149,8 @@ export default {
         case 0: {
           return this.activeStep !== 2
         }
-        case 1: {
-          return this.user.email && !this.errors.email
+        case 2: {
+          return false
         }
       }
       return true
@@ -169,8 +170,6 @@ export default {
           if (this.errors.email) return
           ++this.activeStep;
           break;
-        }
-        case 2: {
         }
       }
     },
