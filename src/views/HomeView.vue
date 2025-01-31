@@ -11,16 +11,20 @@
           <form-stepper v-model:activeStep="activeStep" :steps="steps"/>
         </div>
 
-        <form @submit="nextStep" class="md:col-span-2 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
+        <form @submit.prevent="nextStep"
+              class="md:col-span-2 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
           <div class="mb-6">
-            <h3 class="text-gray-800 text-xl font-bold">Create an account</h3>
+            <h3 class="text-gray-800 text-xl font-bold">{{ activeStep === 2  ? 'Review your information' : 'Create an account'}}</h3>
           </div>
           <div class="space-y-6">
             <div v-if="activeStep === 0">
-              <label class="text-gray-600 text-sm mb-2 block">Username</label>
+              <label class="text-gray-600 text-sm mb-2 block">
+                Username:
+              </label>
               <div class="relative flex items-center">
-                <input name="name" type="text" v-model="user.username" required
-                       class="text-gray-800 bg-white border border-gray-300 w-full text-sm pl-4 pr-8 py-2.5 rounded-md outline-blue-500"
+                <input name="name" type="text" v-model="user.username" @input="validateUsername" required
+                       class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md"
+                       :class="errors.username ? 'border-red-500 outline-red-500' : 'border-gray-30 outline-blue-500'"
                        placeholder="Enter username"/>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
                   <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -29,13 +33,17 @@
                       data-original="#000000"></path>
                 </svg>
               </div>
+              <p v-if="errors.username" class="text-red-500 text-sm mt-1">Invalid Username.</p>
+
             </div>
 
             <div v-else-if="activeStep === 1">
-              <label class="text-gray-600 text-sm mb-2 block">Email</label>
+              <label class="text-gray-600 text-sm mb-2 block">Email:</label>
               <div class="relative flex items-center">
-                <input name="email" type="email" required
-                       class="text-gray-800 bg-white border border-gray-300 w-full text-sm pl-4 pr-8 py-2.5 rounded-md outline-blue-500" placeholder="Enter email"/>
+                <input name="email" type="email" v-model="user.email" @input="validateEmail" required
+                       class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md"
+                       :class="errors.email ? 'border-red-500 outline-red-500' : 'border-gray-30 outline-blue-500'"
+                       placeholder="Enter email"/>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-4 h-4 absolute right-4" viewBox="0 0 682.667 682.667">
                   <defs>
                     <clipPath id="a" clipPathUnits="userSpaceOnUse">
@@ -52,25 +60,37 @@
                   </g>
                 </svg>
               </div>
+              <p v-if="errors.email" class="text-red-500 text-sm mt-1">Invalid email address.</p>
             </div>
 
-
+            <div v-else class="flex flex-col gap-2 text-base">
+              <p><span class="font-semibold">Step:</span> review</p>
+              <p> <span class="font-semibold">Username:</span> {{ user.username}}</p>
+              <p> <span class="font-semibold">Email:</span> {{ user.email}}</p>
+            </div>
           </div>
 
           <div class="flex flex-row-reverse gap-4 mt-6">
             <button
-                v-if="activeStep !== 2"
                 @click="nextStep"
+                :disabled="!nextButtonEnable"
+                id="btn-next"
                 type="submit"
-                    class="cursor-pointer w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-sky-700 hover:bg-sky-900 focus:outline-none">
-              Next Step
+                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
+                :class="!nextButtonEnable ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-sky-700 hover:bg-sky-900'"
+            >
+              {{ activeStep === 2  ? 'Confirm Data' : 'Next Step'}}
             </button>
 
             <button
-                v-if="activeStep === 1"
+                v-show="activeStep === 1"
+                :disabled="activeStep !== 1"
                 @click="activeStep = 0"
+                id="btn-prev"
                 type="button"
-                class="cursor-pointer w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none">
+                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
+                :class="activeStep !== 1 ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-gray-700 hover:bg-gray-800'"
+            >
               Prev Step
             </button>
           </div>
@@ -105,24 +125,57 @@ export default {
           key: 'review'
         }
       ],
-      user:{
-        email:'',
-        username:'',
+      user: {
+        email: '',
+        username: '',
+      },
+      errors: {
+        username: false,
+        email: false
       },
       icon: 'user',
       activeStep: 0,
     }
   },
   computed: {
-
-  },
-  methods:{
-    nextStep(){
-      switch(this.activeStep){
-        case 0:{
-
+    nextButtonEnable() {
+      switch (this.activeStep) {
+        case 0: {
+          return this.user.username && !this.errors.username
+        }
+        case 1: {
+          return this.user.email && !this.errors.email
         }
       }
+      return true
+    }
+  },
+  methods: {
+    nextStep() {
+      switch (this.activeStep) {
+        case 0: {
+          if (this.errors.username) return
+          ++this.activeStep;
+          break;
+        }
+        case 1: {
+          if (this.errors.email) return
+          ++this.activeStep;
+          break;
+        }
+        case 2:{
+        }
+      }
+    },
+    validateUsername() {
+      const username = this.user.username;
+      const usernameRegex = /^[a-zA-Z0-9_]+$/
+      this.errors.username = !username || !usernameRegex.test(username) || username.length < 4 || username.length > 30
+    },
+    validateEmail() {
+      const email = this.user.email
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      this.errors.email = !emailRegex.test(email)
     }
   }
 }
