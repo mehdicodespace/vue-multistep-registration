@@ -14,7 +14,8 @@
         <form @submit.prevent="nextStep"
               class="md:col-span-2 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
           <div class="mb-6">
-            <h3 class="text-gray-800 text-xl font-bold">{{ activeStep === 2 ? 'Review your information' : 'Create an account' }}</h3>
+            <h3 v-if="activeStep <= 2" class="text-gray-800 text-xl font-bold">{{ activeStep === 2 ? 'Review your information' : 'Create an account' }}</h3>
+            <h3 v-else class="text-gray-800 text-xl font-bold">Checking description component :)</h3>
           </div>
           <div class="space-y-6">
             <div v-if="activeStep === 0">
@@ -67,18 +68,18 @@
               <p v-if="errors.email" class="text-red-500 text-sm mt-1">Invalid email address.</p>
             </div>
 
-            <div v-else class="flex flex-col gap-2 text-base">
+            <div v-else-if="activeStep === 2" class="flex flex-col gap-2 text-base">
               <p><span class="font-semibold">Step:</span> review</p>
               <p><span class="font-semibold">Username:</span> {{ user.username }}</p>
               <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
             </div>
 
+            <Description v-else/>
           </div>
 
           <div class="flex flex-row-reverse gap-4 mt-6">
             <button
-                v-show="activeStep !== 2"
-                @click="nextStep"
+                v-show="activeStep < 2"
                 :disabled="!nextButtonEnable"
                 id="btn-next"
                 type="submit"
@@ -86,6 +87,15 @@
                 :class="!nextButtonEnable ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-sky-700 hover:bg-sky-900'"
             >
               Next Step
+            </button>
+
+            <button
+                v-show="activeStep === 2"
+                @click="nextStep"
+                type="submit"
+                class="cursor-pointer bg-sky-700 hover:bg-sky-900 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
+            >
+              Check Description.vue
             </button>
 
             <button
@@ -109,9 +119,10 @@
 
 <script>
 import FormStepper from "@/components/FormStepper.vue";
+import Description from "@/components/Description.vue";
 
 export default {
-  components: {FormStepper},
+  components: {FormStepper, Description},
   data() {
     return {
       steps: [
@@ -168,6 +179,10 @@ export default {
         case 1: {
           this.validateEmail()
           if (this.errors.email) return
+          ++this.activeStep;
+          break;
+        }
+        case 2: {
           ++this.activeStep;
           break;
         }
