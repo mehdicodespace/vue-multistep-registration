@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="font-[sans-serif] bg-white max-w-4xl flex items-center mx-auto min-h-screen p-4">
+    <div class="font-[sans-serif] bg-white max-w-4xl flex items-start md:items-center mx-auto min-h-screen p-4 sm:p-6">
       <div class="grid w-full min-w-0 md:grid-cols-3 items-center shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-xl overflow-hidden">
         <div
-            class="max-md:order-1 flex flex-col py-16 justify-center md:space-y-16 space-y-8 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4">
-          <div>
+            class="flex flex-col justify-center md:space-y-16 min-h-full md:bg-gradient-to-r md:from-gray-900 md:to-gray-700 px-5 pt-6 pb-5 md:px-4 md:py-16 lg:px-8 border-b border-gray-100 md:border-0">
+          <div class="hidden md:block">
             <h2 class="text-white text-lg">Create Your Account</h2>
             <p class="text-[13px] text-gray-300 mt-3 leading-relaxed">Welcome to our registration page! Get started by creating your account.</p>
           </div>
@@ -12,7 +12,7 @@
         </div>
 
         <form novalidate @submit.prevent="nextStep"
-              class="md:col-span-2 min-w-0 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
+              class="md:col-span-2 min-w-0 w-full py-6 px-5 sm:px-10 md:px-12 lg:px-16 mx-auto">
           <div class="mb-6">
             <h1 v-if="activeStep <= 2" class="text-gray-800 text-xl font-bold">{{ activeStep === 2 ? 'Review your information' : 'Create an account' }}</h1>
             <h1 v-else class="text-gray-800 text-xl font-bold">Description checker</h1>
