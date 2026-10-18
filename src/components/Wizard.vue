@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="font-[sans-serif] bg-white max-w-4xl flex items-center mx-auto min-h-screen p-4">
-      <div class="grid md:grid-cols-3 items-center shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-xl overflow-hidden">
+      <div class="grid w-full min-w-0 md:grid-cols-3 items-center shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-xl overflow-hidden">
         <div
             class="max-md:order-1 flex flex-col py-16 justify-center md:space-y-16 space-y-8 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4">
           <div>
@@ -12,7 +12,7 @@
         </div>
 
         <form novalidate @submit.prevent="nextStep"
-              class="md:col-span-2 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
+              class="md:col-span-2 min-w-0 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
           <div class="mb-6">
             <h1 v-if="activeStep <= 2" class="text-gray-800 text-xl font-bold">{{ activeStep === 2 ? 'Review your information' : 'Create an account' }}</h1>
             <h1 v-else class="text-gray-800 text-xl font-bold">Description checker</h1>
@@ -68,7 +68,7 @@
               <p id="email-error" role="alert" v-if="errors.email" class="text-red-500 text-sm mt-1">Invalid email address.</p>
             </div>
 
-            <div v-else-if="activeStep === 2" class="flex flex-col gap-2 text-base">
+            <div v-else-if="activeStep === 2" class="flex min-w-0 flex-col gap-2 text-base [overflow-wrap:anywhere]">
               <p><span class="font-semibold">Step:</span> review</p>
               <p><span class="font-semibold">Username:</span> {{ user.username }}</p>
               <p><span class="font-semibold">Email:</span> {{ user.email }}</p>
@@ -77,13 +77,13 @@
             <Description v-else/>
           </div>
 
-          <div class="flex flex-row-reverse gap-4 mt-6">
+          <div class="flex flex-col gap-3 mt-6 sm:flex-row-reverse sm:gap-4">
             <button
                 v-show="activeStep < 2"
                 :disabled="!nextButtonEnable"
                 id="btn-next"
                 type="submit"
-                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+                class="min-h-11 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
                 :class="!nextButtonEnable ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-sky-700 hover:bg-sky-900'"
             >
               Next Step
@@ -92,7 +92,7 @@
             <button
                 v-show="activeStep === 2"
                 type="submit"
-                class="cursor-pointer bg-sky-700 hover:bg-sky-900 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+                class="cursor-pointer bg-sky-700 hover:bg-sky-900 min-h-11 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
             >
               Check Description
             </button>
@@ -103,7 +103,7 @@
                 @click="--activeStep"
                 id="btn-prev"
                 type="button"
-                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+                class="min-h-11 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
                 :class="activeStep === 0 ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-gray-700 hover:bg-gray-800'"
             >
               Prev Step
