@@ -1,5 +1,7 @@
 # Vue Multistep Registration
 
+Live demo: https://simple-multistep-registration.netlify.app/
+
 A responsive registration form built with Vue 3, Vite, and Tailwind CSS. This is a frontend project: validation and form state run in the browser, with no registration endpoint or data persistence.
 
 ![Registration review](src/assets/imgs/03-review.png)
