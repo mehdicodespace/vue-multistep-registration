@@ -1,8 +1,9 @@
 <template>
   <div>
-    <input id="description" v-model="text" @input="checkBalance"
-           class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md border-gray-30 outline-blue-500"/>
-    <p class="text-sm mt-2 text-sky-700">{{ message }}</p>
+    <label for="description" class="text-gray-600 text-sm mb-2 block">Description:</label>
+    <input id="description" aria-describedby="description-feedback" v-model="text" @input="checkBalance"
+           class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md border-gray-300 outline-blue-500"/>
+    <p id="description-feedback" role="status" class="text-sm mt-2 text-sky-700">{{ message }}</p>
   </div>
 </template>
 
@@ -14,6 +15,9 @@ export default {
       message: '',
       typingTimer: null,
     }
+  },
+  beforeUnmount() {
+    clearTimeout(this.typingTimer)
   },
   methods: {
     isBalanced(input) {

@@ -5,29 +5,29 @@
         <div
             class="max-md:order-1 flex flex-col py-16 justify-center md:space-y-16 space-y-8 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4">
           <div>
-            <h4 class="text-white text-lg">Create Your Account</h4>
+            <h2 class="text-white text-lg">Create Your Account</h2>
             <p class="text-[13px] text-gray-300 mt-3 leading-relaxed">Welcome to our registration page! Get started by creating your account.</p>
           </div>
-          <form-stepper v-model:activeStep="activeStep" :steps="steps"/>
+          <FormStepper :active-step="activeStep" :steps="steps" @select-step="goToStep"/>
         </div>
 
-        <form @submit.prevent="nextStep"
+        <form novalidate @submit.prevent="nextStep"
               class="md:col-span-2 w-full py-6 px-6 sm:px-16 max-md:max-w-xl mx-auto">
           <div class="mb-6">
-            <h3 v-if="activeStep <= 2" class="text-gray-800 text-xl font-bold">{{ activeStep === 2 ? 'Review your information' : 'Create an account' }}</h3>
-            <h3 v-else class="text-gray-800 text-xl font-bold">Checking description component :)</h3>
+            <h1 v-if="activeStep <= 2" class="text-gray-800 text-xl font-bold">{{ activeStep === 2 ? 'Review your information' : 'Create an account' }}</h1>
+            <h1 v-else class="text-gray-800 text-xl font-bold">Description checker</h1>
           </div>
           <div class="space-y-6">
             <div v-if="activeStep === 0">
-              <label class="text-gray-600 text-sm mb-2 block">
+              <label for="username" class="text-gray-600 text-sm mb-2 block">
                 Username:
               </label>
               <div class="relative flex items-center">
                 <input
                     id="username"
-                    name="name" type="text" v-model="user.username" @input="validateUsername"
+                    name="username" type="text" autocomplete="username" :aria-invalid="errors.username" :aria-describedby="errors.username ? 'username-error' : undefined" v-model="user.username" @input="validateUsername"
                     class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md"
-                    :class="errors.username ? 'border-red-500 outline-red-500' : 'border-gray-30 outline-blue-500'"
+                    :class="errors.username ? 'border-red-500 outline-red-500' : 'border-gray-300 outline-blue-500'"
                     placeholder="Enter username"/>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
                   <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -36,18 +36,18 @@
                       data-original="#000000"></path>
                 </svg>
               </div>
-              <p v-if="errors.username" class="text-red-500 text-sm mt-1">Invalid Username.</p>
+              <p id="username-error" role="alert" v-if="errors.username" class="text-red-500 text-sm mt-1">Invalid Username.</p>
 
             </div>
 
             <div v-else-if="activeStep === 1">
-              <label class="text-gray-600 text-sm mb-2 block">Email:</label>
+              <label for="email" class="text-gray-600 text-sm mb-2 block">Email:</label>
               <div class="relative flex items-center">
                 <input
                     id="email"
-                    name="email" type="text" v-model="user.email" @input="validateEmail"
+                    name="email" type="email" autocomplete="email" :aria-invalid="errors.email" :aria-describedby="errors.email ? 'email-error' : undefined" v-model="user.email" @input="validateEmail"
                     class="text-gray-800 bg-white border w-full text-sm pl-4 pr-8 py-2.5 rounded-md"
-                    :class="errors.email ? 'border-red-500 outline-red-500' : 'border-gray-30 outline-blue-500'"
+                    :class="errors.email ? 'border-red-500 outline-red-500' : 'border-gray-300 outline-blue-500'"
                     placeholder="Enter email"/>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-4 h-4 absolute right-4" viewBox="0 0 682.667 682.667">
                   <defs>
@@ -65,7 +65,7 @@
                   </g>
                 </svg>
               </div>
-              <p v-if="errors.email" class="text-red-500 text-sm mt-1">Invalid email address.</p>
+              <p id="email-error" role="alert" v-if="errors.email" class="text-red-500 text-sm mt-1">Invalid email address.</p>
             </div>
 
             <div v-else-if="activeStep === 2" class="flex flex-col gap-2 text-base">
@@ -83,7 +83,7 @@
                 :disabled="!nextButtonEnable"
                 id="btn-next"
                 type="submit"
-                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
+                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
                 :class="!nextButtonEnable ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-sky-700 hover:bg-sky-900'"
             >
               Next Step
@@ -91,11 +91,10 @@
 
             <button
                 v-show="activeStep === 2"
-                @click="nextStep"
                 type="submit"
-                class="cursor-pointer bg-sky-700 hover:bg-sky-900 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
+                class="cursor-pointer bg-sky-700 hover:bg-sky-900 w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
             >
-              Check Description.vue
+              Check Description
             </button>
 
             <button
@@ -104,7 +103,7 @@
                 @click="--activeStep"
                 id="btn-prev"
                 type="button"
-                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus:outline-none"
+                class="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
                 :class="activeStep === 0 ? 'cursor-default bg-gray-300' : 'cursor-pointer bg-gray-700 hover:bg-gray-800'"
             >
               Prev Step
@@ -150,24 +149,33 @@ export default {
         username: false,
         email: false
       },
-      icon: 'user',
       activeStep: 0,
     }
   },
   computed: {
     nextButtonEnable() {
-      switch (this.activeStep) {
-        case 0: {
-          return this.activeStep !== 2
-        }
-        case 2: {
-          return false
-        }
-      }
-      return true
+      return this.activeStep < 2
     }
   },
   methods: {
+    goToStep(step) {
+      if (!Number.isInteger(step) || step < 0 || step > 2) return
+      if (step > this.activeStep) {
+        this.validateUsername()
+        if (this.errors.username) {
+          this.activeStep = 0
+          return
+        }
+        if (step > 1) {
+          this.validateEmail()
+          if (this.errors.email) {
+            this.activeStep = 1
+            return
+          }
+        }
+      }
+      this.activeStep = step
+    },
     nextStep() {
       switch (this.activeStep) {
         case 0: {
@@ -201,6 +209,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>
